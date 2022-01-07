@@ -48,24 +48,32 @@ public class Employee {
     }
 
     public static CharSequence listEmployees(Employee[] employees) {
-        StringBuilder listEmployeesBuilder = new StringBuilder();
-        Function<Employee, StringBuilder> employeeFunction = (e) -> listEmployeesBuilder.append(e).append("\n");
-        return employeeIterating(employeeFunction, employees);
+        return listEmployees(employees,0);
     }
 
     public static CharSequence listEmployees(Employee[] employees, int department) {
         StringBuilder listEmployeesBuilder = new StringBuilder();
-        employees = filterByDepartment(employees, department);
-        Function<Employee, StringBuilder> employeeFunction = (e) -> listEmployeesBuilder
-                .append("Full Name: ").append(e.getFullName())
-                .append(", Salary: ").append(e.getSalary())
-                .append(", ID: ").append(e.getId()).append("\n");
-        return employeeIterating(employeeFunction, employees);
+        boolean needDepartment = true;
+        if (department !=0) {
+            employees = filterByDepartment(employees, department);
+            needDepartment = false;
+        }
+        for (Employee employee : employees) {
+            if (employee != null) {
+                listEmployeesBuilder.append("\n").append(employee.toString(true,true,needDepartment,true));
+            }
+        }
+        return listEmployeesBuilder;
     }
 
     public static float costsSum(Employee[] employees) {
-        float[] costsSum = {0};
-        return employeeIterating((e) -> (costsSum[0] += e.getSalary()), employees);
+        float costsSum = 0;
+        for (Employee employee : employees) {
+            if (employee != null) {
+                costsSum += employee.getSalary();
+            }
+        }
+        return costsSum;
     }
 
     public static float costsSum(Employee[] employees, int department) {
@@ -74,8 +82,13 @@ public class Employee {
     }
 
     public static Employee findEmployeeMinSalary(Employee[] employees) {
-        Employee[] largest = {employees[0]};
-        return employeeIterating((e) -> (largest[0].getSalary() > e.getSalary() ? largest[0] = e : largest[0]), employees);
+        Employee largest = employees[0];
+        for (Employee employee : employees) {
+            if (employee != null) {
+                if (largest.getSalary() > employee.getSalary()) largest = employee;
+            }
+        }
+        return largest;
     }
 
     public static Employee findEmployeeMinSalary(Employee[] employees, int department) {
@@ -83,8 +96,13 @@ public class Employee {
     }
 
     public static Employee findEmployeeMaxSalary(Employee[] employees) {
-        Employee[] largest = {employees[0]};
-        return employeeIterating((e) -> (largest[0].getSalary() < e.getSalary() ? largest[0] = e : largest[0]), employees);
+        Employee largest = employees[0];
+        for (Employee employee : employees) {
+            if (employee != null) {
+                if (largest.getSalary() < employee.getSalary()) largest = employee;
+            }
+        }
+        return largest;
     }
 
     public static Employee findEmployeeMaxSalary(Employee[] employees, int department) {
@@ -102,56 +120,79 @@ public class Employee {
 
     public static CharSequence listFullNameEmployees(Employee[] employees) {
         StringBuilder allFullNameBuilder = new StringBuilder();
-        Function<Employee, StringBuilder> employeeFunction = (e) -> allFullNameBuilder.append(e.getFullName()).append("\n");
-        return employeeIterating(employeeFunction, employees);
+        for (Employee employee : employees) {
+            if (employee != null) {
+                allFullNameBuilder.append("\n").append(employee.toString(true,false,false,false));
+            }
+        }
+        return allFullNameBuilder;
     }
 
     public static CharSequence listFullNameEmployees(Employee[] employees, int department) {
         return listFullNameEmployees(filterByDepartment(employees, department));
     }
 
-    public static void indexingSalary(Employee[] employees, int percent) {
-        Consumer<Employee> employeeConsumer = (e) -> e.setSalary(e.getSalary() + e.getSalary()/100 * percent);
-        employeeIterating(employeeConsumer, employees);
+    public static int indexingSalary(Employee[] employees, int percent) {
+        for (Employee employee : employees) {
+            if (employee != null) {
+                employee.setSalary(employee.getSalary() + employee.getSalary() / 100 * percent);
+            }
+        }
+        return percent;
     }
 
-    public static void indexingSalary(Employee[] employees, int percent, int department) {
-        indexingSalary(filterByDepartment(employees, department), percent);
+    public static CharSequence employeeWithSalaryMore(Employee[] employees, int salary){
+        StringBuilder salaryMoreBuilder = new StringBuilder();
+        salaryMoreBuilder.append(salary).append(":\n");
+        for (Employee employee : employees) {
+            if (employee != null) {
+                if (employee.getSalary() >= salary) {
+                    salaryMoreBuilder.append("\n").append(employee.toString(true,true,true,true));
+                }
+            }
+        }
+        return salaryMoreBuilder;
+    }
+
+    public static CharSequence employeeWithSalaryLess(Employee[] employees, int salary){
+        StringBuilder salaryLessBuilder = new StringBuilder();
+        salaryLessBuilder.append(salary).append(":\n");
+        for (Employee employee : employees) {
+            if (employee != null) {
+                if (employee.getSalary() < salary) {
+                    salaryLessBuilder.append('\n').append(employee.toString(true,true,true,true));
+                }
+            }
+        }
+        return salaryLessBuilder;
+    }
+
+    public static int indexingSalary(Employee[] employees, int percent, int department) {
+        return indexingSalary(filterByDepartment(employees, department), percent);
     }
 
     public static Employee[] filterByDepartment(Employee[] employees, int department) {
-        List<Employee> listEmployee = new ArrayList();
-        Consumer<Employee> employeeConsumer = (e) -> {
-            if (e.getDepartment() == department) listEmployee.add(e);
-        };
-        employeeIterating(employeeConsumer, employees);
-        return listEmployee.toArray(new Employee[listEmployee.size()]);
-    }
-
-    public static <T> T employeeIterating(Function<Employee, T> employeesTransformer, Employee[] employees) {
-        T result = null;
-        for (int i = 0; i < employees.length; i++) {
+        Employee[] departmentEmployees = employees.clone();
+        for (int i = 0; i<employees.length; ++i) {
             if (employees[i] != null) {
-                result = employeesTransformer.apply(employees[i]);
+                if (employees[i].getDepartment() != department) departmentEmployees[i] = null;
             }
         }
-        return result;
-    }
-
-    public static void employeeIterating(Consumer<Employee> employeesTransformer, Employee[] employees) {
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] != null) {
-                employeesTransformer.accept(employees[i]);
-            }
-        }
+        return departmentEmployees;
     }
 
     @Override
     public String toString() {
-        return "Full Name: " + fullName +
-                ", Salary: " + salary +
-                ", Department: " + department +
-                ", ID: " + id;
+        return this.toString(true,true,true,true);
+    }
+
+    public String toString(boolean needFullName, boolean needSalary, boolean needDepartment, boolean needID) {
+        StringBuilder resultString = new StringBuilder();
+        if (needFullName)  resultString.append("Full Name: ").append(fullName).append(" ");
+        if (needSalary) resultString.append("Salary: ").append(salary).append(" ");
+        if (needDepartment) resultString.append("Department: ").append(department).append(" ");
+        if (needID) resultString.append("ID: ").append(id).append(" ");
+        return resultString.toString();
     }
 
 }
