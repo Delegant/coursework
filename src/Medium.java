@@ -11,7 +11,7 @@ public class Medium {
         System.out.println("Минимальная зарплата отел " + department + ":\n" + findEmployeeMinSalaryOfDepartment(department));
         System.out.println("Максимальная зарплата отел " + department + ":\n" + findEmployeeMaxSalaryOfDepartment(department));
         System.out.println("Затраты на зарплату отел " + department + ":\n" + costsSum(department));
-        System.out.println("Средняя зарплата отел " + department + ":\n" + meanSalary(department));
+        System.out.println("Средняя зарплата отел " + department + ":\n" + getAverageSalary(department));
         System.out.println("Зарплаты отдела " + department + " проиндексированы на: " + indexingSalary(department, 10) + "%");
         printEmployeesOfDepartment(department);
         float salary = 200f;
@@ -22,7 +22,6 @@ public class Medium {
     }
 
     public static Employee findEmployeeMinSalaryOfDepartment(int department) {
-        ;
         float lesser = Float.MAX_VALUE;
         Employee result = null;
         for (Employee employee : employees) {
@@ -56,7 +55,7 @@ public class Medium {
         return costsSum;
     }
 
-    public static float meanSalary(int department) {
+    public static float getAverageSalary(int department) {
         float costsSum = 0;
         int size = 0;
         for (Employee employee : employees) {
@@ -71,7 +70,8 @@ public class Medium {
     public static int indexingSalary(int department, int percent) {
         for (Employee employee : employees) {
             if (employee != null && employee.getDepartment() == department) {
-                employee.setSalary(employee.getSalary() + employee.getSalary() / 100 * percent);
+                float currentSalary = employee.getSalary();
+                employee.setSalary(currentSalary * (percent/100f+1));
             }
         }
         return percent;

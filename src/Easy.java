@@ -11,7 +11,7 @@ public class Easy {
         System.out.println("Затраты на зарплату: " + costsSum());
         System.out.println("Минимальная зарплата: " + findEmployeeMinSalary());
         System.out.println("Максимальная зарплата: " + findEmployeeMaxSalary());
-        System.out.println("Средняя зарплата: " + meanSalary());
+        System.out.println("Средняя зарплата: " + getAverageSalary());
         printFullNameEmployees();
     }
 
@@ -57,7 +57,7 @@ public class Easy {
         return result;
     }
 
-    public static float meanSalary() {
+    public static float getAverageSalary() {
         return costsSum() / Employee.getIdCounter();
     }
 
