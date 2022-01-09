@@ -8,10 +8,10 @@ public class Medium {
         employees[2] = new Employee("Agent Smith", 3, 1000);
         employees[3] = new Employee("Mr Andersen", 1, 1);
         int department = 1;
-        System.out.println("Минимальная зарплата отел " + department + ":\n" + findEmployeeMinSalaryOfDepartment(department));
-        System.out.println("Максимальная зарплата отел " + department + ":\n" + findEmployeeMaxSalaryOfDepartment(department));
-        System.out.println("Затраты на зарплату отел " + department + ":\n" + costsSum(department));
-        System.out.println("Средняя зарплата отел " + department + ":\n" + getAverageSalary(department));
+        System.out.println("Минимальная зарплата отдел " + department + ":\n" + findEmployeeMinSalaryOfDepartment(department));
+        System.out.println("Максимальная зарплата отдел " + department + ":\n" + findEmployeeMaxSalaryOfDepartment(department));
+        System.out.println("Затраты на зарплату отдел " + department + ":\n" + costsSum(department));
+        System.out.println("Средняя зарплата отдел " + department + ":\n" + getAverageSalary(department));
         System.out.println("Зарплаты отдела " + department + " проиндексированы на: " + indexingSalary(department, 10) + "%");
         printEmployeesOfDepartment(department);
         float salary = 200f;
