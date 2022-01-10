@@ -40,6 +40,10 @@ public class Employee {
         return idCounter;
     }
 
+    public static void setIdCounter(int idCounter) {
+        Employee.idCounter = idCounter;
+    }
+
     @Override
     public String toString() {
         return "Full Name: " + fullName +
